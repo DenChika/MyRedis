@@ -26,7 +26,7 @@ func main() {
 		}
 	}()
 	buf := make([]byte, 128)
-	for ; ; _, err = c.Read(buf) {
+	for ; err == nil; _, err = c.Read(buf) {
 		if _, err = c.Write([]byte("+PONG\r\n")); err != nil {
 			fmt.Println("Error writing to connection: ", err.Error())
 		}
