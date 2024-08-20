@@ -32,8 +32,8 @@ func main() {
 		fmt.Println("Error reading from connection: ", err.Error())
 	}
 	pings := bytes.Split(buf, []byte("\n"))
-	for _, cmd := range pings {
-		if _, err := c.Write(cmd); err != nil {
+	for range pings {
+		if _, err := c.Write([]byte("+PONG\r\n")); err != nil {
 			fmt.Println("Error writing to connection: ", err.Error())
 		}
 	}
