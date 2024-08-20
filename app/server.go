@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"net"
 	"os"
@@ -28,13 +27,15 @@ func main() {
 	}()
 
 	buf := make([]byte, 128)
-	if _, err = c.Read(buf); err != nil {
-		fmt.Println("Error reading from connection: ", err.Error())
-	}
-	pings := bytes.Split(buf, []byte("\n"))
-	for range pings {
-		if _, err := c.Write([]byte("+PONG\r\n")); err != nil {
+	for {
+		if _, err = c.Read(buf); err != nil {
+			fmt.Println("Error reading from connection: ", err.Error())
+		}
+
+		if _, err = c.Write([]byte("+PONG\r\n")); err != nil {
 			fmt.Println("Error writing to connection: ", err.Error())
 		}
+
+		clear(buf)
 	}
 }
