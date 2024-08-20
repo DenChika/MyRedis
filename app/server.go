@@ -25,9 +25,14 @@ func main() {
 			fmt.Println("Error closing connection: ", err.Error())
 		}
 	}()
+	for {
+		buf := make([]byte, 128)
+		if _, err = c.Read(buf); err != nil {
+			fmt.Println("Error reading from connection: ", err.Error())
+		}
 
-	_, err = c.Write([]byte("+PONG\r\n"))
-	if err != nil {
-		fmt.Println("Error writing to connection: ", err.Error())
+		if _, err = c.Write([]byte("+PONG\r\n")); err != nil {
+			fmt.Println("Error writing to connection: ", err.Error())
+		}
 	}
 }
