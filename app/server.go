@@ -42,16 +42,20 @@ func handleConn(conn net.Conn) {
 	}()
 
 	input := make([]byte, 1024)
-	if _, err := conn.Read(input); err != nil {
-		fmt.Println("Error reading from connection: ", err.Error())
-	}
+	for {
+		if _, err := conn.Read(input); err != nil {
+			fmt.Println("Error reading from connection: ", err.Error())
+		}
 
-	output, err := commands.Execute(string(input))
-	if err != nil {
-		fmt.Println("Error executing command: ", err.Error())
-	}
+		output, err := commands.Execute(string(input))
+		if err != nil {
+			fmt.Println("Error executing command: ", err.Error())
+		}
 
-	if _, err := conn.Write([]byte(output)); err != nil {
-		fmt.Println("Error writing to connection: ", err.Error())
+		if _, err := conn.Write([]byte(output)); err != nil {
+			fmt.Println("Error writing to connection: ", err.Error())
+		}
+
+		clear(input)
 	}
 }
