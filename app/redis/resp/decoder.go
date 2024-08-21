@@ -1,7 +1,6 @@
 package resp
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -11,7 +10,6 @@ func clrfSplit(str string) []string {
 
 func Decode(str string) []string {
 	split := clrfSplit(str)
-	fmt.Println(split)
 
 	result := make([]string, 0, len(split))
 	for i := 0; i < len(split); i++ {
