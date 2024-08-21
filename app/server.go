@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-starter-go/app/commands/helpers"
+	"github.com/codecrafters-io/redis-starter-go/app/commands"
 	"net"
 	"os"
 )
@@ -47,7 +47,7 @@ func handleConn(conn net.Conn) {
 			fmt.Println("Error reading from connection: ", err.Error())
 		}
 
-		output, err := helpers.ExecuteCommand(string(input))
+		output, err := commands.Execute(string(input))
 		if err != nil {
 			fmt.Println("Error executing command: ", err.Error())
 		}

@@ -25,3 +25,7 @@ func EncodeArray[T Type](arr []T) string {
 	}
 	return buf.String()
 }
+
+func EncodeEmpty() string {
+	return fmt.Sprintf("$-1%s", ClrfDelimeter)
+}
