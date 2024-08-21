@@ -2,30 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/codecrafters-io/redis-starter-go/app/commands/helpers"
 	"net"
 	"os"
 )
-
-func handleConn(conn net.Conn) {
-	defer func() {
-		if err := conn.Close(); err != nil {
-			fmt.Println("Error closing connection: ", err.Error())
-		}
-	}()
-
-	buf := make([]byte, 128)
-	for {
-		if _, err := conn.Read(buf); err != nil {
-			fmt.Println("Error reading from connection: ", err.Error())
-		}
-
-		if _, err := conn.Write([]byte("+PONG\r\n")); err != nil {
-			fmt.Println("Error writing to connection: ", err.Error())
-		}
-
-		clear(buf)
-	}
-}
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -51,5 +31,31 @@ func main() {
 			}
 			handleConn(c)
 		}()
+	}
+}
+
+func handleConn(conn net.Conn) {
+	defer func() {
+		if err := conn.Close(); err != nil {
+			fmt.Println("Error closing connection: ", err.Error())
+		}
+	}()
+
+	input := make([]byte, 1024)
+	for {
+		if _, err := conn.Read(input); err != nil {
+			fmt.Println("Error reading from connection: ", err.Error())
+		}
+
+		output, err := helpers.ExecuteCommand(string(input))
+		if err != nil {
+			fmt.Println("Error executing command: ", err.Error())
+		}
+
+		if _, err := conn.Write([]byte(output)); err != nil {
+			fmt.Println("Error writing to connection: ", err.Error())
+		}
+
+		clear(input)
 	}
 }
