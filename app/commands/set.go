@@ -5,7 +5,7 @@ import (
 	"github.com/codecrafters-io/redis-starter-go/app/redis/resp/types"
 )
 
-var SetMemoryData map[string]string
+var SetMemoryData = make(map[string]string)
 
 type Set struct{}
 
