@@ -19,8 +19,8 @@ func EncodeArray[T Type](arr []T) string {
 
 	buf := bytes.NewBuffer([]byte(arrMark))
 
-	for _, elem := range arr {
-		encoded := fmt.Sprintf("%v%s", elem.Encode(), ClrfDelimeter)
+	for _, v := range arr {
+		encoded := fmt.Sprintf("%v%s", v.Encode(), ClrfDelimeter)
 		buf.WriteString(encoded)
 	}
 	return buf.String()
