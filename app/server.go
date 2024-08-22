@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/codecrafters-io/redis-starter-go/app/commands"
+	"github.com/codecrafters-io/redis-starter-go/app/lib"
 	"net"
 	"os"
 )
@@ -29,34 +30,37 @@ func main() {
 				fmt.Println("Error accepting connection: ", err.Error())
 				os.Exit(1)
 			}
-			handleConn(c)
+			handleConn(lib.NewSafeConn(c))
 		}()
 	}
 }
 
-func handleConn(conn net.Conn) {
+func handleConn(conn *lib.SafeConn) {
 	defer func() {
 		if err := conn.Close(); err != nil {
 			fmt.Println("Error closing connection: ", err.Error())
 		}
 	}()
 
-	input := make([]byte, 1024)
 	executor := commands.NewExecutor()
+
 	for {
-		if _, err := conn.Read(input); err != nil {
-			fmt.Println("Error reading from connection: ", err.Error())
-		}
+		go func() {
+			input := make([]byte, 128)
 
-		output, err := executor.Execute(string(input))
-		if err != nil {
-			fmt.Println("Error executing command: ", err.Error())
-		}
+			if _, err := conn.Read(input); err != nil {
+				fmt.Println("Error reading from connection: ", err.Error())
+			}
 
-		if _, err := conn.Write([]byte(output)); err != nil {
-			fmt.Println("Error writing to connection: ", err.Error())
-		}
+			output, err := executor.Execute(string(input))
+			if err != nil {
+				fmt.Println("Error executing command: ", err.Error())
+			}
 
-		clear(input)
+			if _, err = conn.Write([]byte(output)); err != nil {
+				fmt.Println("Error writing to connection: ", err.Error())
+			}
+		}()
+
 	}
 }

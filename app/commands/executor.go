@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/codecrafters-io/redis-starter-go/app/redis/resp"
 	"strings"
+	"sync"
 )
 
 type CliCommand interface {
@@ -11,10 +12,11 @@ type CliCommand interface {
 
 type Executor struct {
 	Vocabulary map[string]string
+	Mu         *sync.Mutex
 }
 
 func NewExecutor() *Executor {
-	return &Executor{Vocabulary: make(map[string]string)}
+	return &Executor{Vocabulary: make(map[string]string), Mu: &sync.Mutex{}}
 }
 
 func (e *Executor) Execute(str string) (string, error) {
@@ -31,7 +33,7 @@ func (e *Executor) Execute(str string) (string, error) {
 		cmd = &Echo{}
 		break
 	case "set":
-		cmd = &Set{e.Vocabulary}
+		cmd = &Set{Vocabulary: e.Vocabulary, Mu: e.Mu}
 		break
 	case "get":
 		cmd = &Get{e.Vocabulary}
