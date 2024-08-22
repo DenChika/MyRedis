@@ -5,11 +5,13 @@ import (
 	"github.com/codecrafters-io/redis-starter-go/app/redis/resp/types"
 )
 
-type Get struct{}
+type Get struct {
+	Vocabulary map[string]string
+}
 
-func (*Get) Execute(input []string) (string, error) {
+func (c *Get) Execute(input []string) (string, error) {
 	src := input[0]
-	value, ok := SetMemoryData[src]
+	value, ok := c.Vocabulary[src]
 	if !ok {
 		return resp.EncodeEmpty(), nil
 	}

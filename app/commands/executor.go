@@ -9,7 +9,15 @@ type CliCommand interface {
 	Execute([]string) (string, error)
 }
 
-func Execute(str string) (string, error) {
+type Executor struct {
+	Vocabulary map[string]string
+}
+
+func NewExecutor() *Executor {
+	return &Executor{Vocabulary: make(map[string]string)}
+}
+
+func (e *Executor) Execute(str string) (string, error) {
 	decoded := resp.Decode(str)
 
 	name := strings.ToLower(decoded[0])
@@ -23,10 +31,10 @@ func Execute(str string) (string, error) {
 		cmd = &Echo{}
 		break
 	case "set":
-		cmd = &Set{}
+		cmd = &Set{e.Vocabulary}
 		break
 	case "get":
-		cmd = &Get{}
+		cmd = &Get{e.Vocabulary}
 		break
 	}
 

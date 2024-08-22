@@ -42,12 +42,13 @@ func handleConn(conn net.Conn) {
 	}()
 
 	input := make([]byte, 1024)
+	executor := commands.NewExecutor()
 	for {
 		if _, err := conn.Read(input); err != nil {
 			fmt.Println("Error reading from connection: ", err.Error())
 		}
 
-		output, err := commands.Execute(string(input))
+		output, err := executor.Execute(string(input))
 		if err != nil {
 			fmt.Println("Error executing command: ", err.Error())
 		}
