@@ -2,7 +2,7 @@ package commands
 
 import (
 	"github.com/codecrafters-io/redis-starter-go/app/commands"
-	"github.com/codecrafters-io/redis-starter-go/app/redis/resp"
+	"github.com/codecrafters-io/redis-starter-go/app/resp"
 	"strings"
 	"sync"
 )

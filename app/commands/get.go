@@ -1,8 +1,8 @@
 package commands
 
 import (
-	"github.com/codecrafters-io/redis-starter-go/app/redis/resp"
-	"github.com/codecrafters-io/redis-starter-go/app/redis/resp/types"
+	"github.com/codecrafters-io/redis-starter-go/app/resp"
+	"github.com/codecrafters-io/redis-starter-go/app/resp/types"
 )
 
 type Get struct {
