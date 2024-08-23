@@ -47,9 +47,11 @@ func (c *Set) Execute(input []string) (string, error) {
 
 func (c *Set) pxExecute(word string, ms int) {
 	ticker := time.NewTicker(time.Duration(ms) * time.Millisecond)
+	fmt.Println("tick")
 	for {
 		select {
 		case <-ticker.C:
+			fmt.Println("boom")
 			delete(c.Vocabulary, word)
 			break
 		default:
