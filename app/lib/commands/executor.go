@@ -34,10 +34,10 @@ func (e *Executor) Execute(str string) (string, error) {
 		cmd = &commands.Echo{}
 		break
 	case "set":
-		cmd = &commands.Set{Vocabulary: e.Vocabulary, Mu: e.Mu}
+		cmd = &commands.Set{Vocabulary: &e.Vocabulary, Mu: e.Mu}
 		break
 	case "get":
-		cmd = &commands.Get{e.Vocabulary}
+		cmd = &commands.Get{Vocabulary: &e.Vocabulary}
 		break
 	}
 

@@ -12,7 +12,7 @@ import (
 )
 
 type Set struct {
-	Vocabulary map[string]string
+	Vocabulary *map[string]string
 	Mu         *sync.Mutex
 }
 
@@ -20,7 +20,7 @@ func (c *Set) Execute(input []string) (string, error) {
 	src, value := input[0], input[1]
 
 	c.Mu.Lock()
-	c.Vocabulary[src] = value
+	(*c.Vocabulary)[src] = value
 	c.Mu.Unlock()
 
 	if len(input) > 2 {
@@ -47,12 +47,10 @@ func (c *Set) Execute(input []string) (string, error) {
 
 func (c *Set) pxExecute(word string, ms int) {
 	ticker := time.NewTicker(time.Duration(ms) * time.Millisecond)
-	fmt.Println("tick")
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Println("boom")
-			delete(c.Vocabulary, word)
+			delete(*c.Vocabulary, word)
 			break
 		default:
 			continue
