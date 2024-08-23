@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"github.com/codecrafters-io/redis-starter-go/app/commands"
 	"github.com/codecrafters-io/redis-starter-go/app/redis/resp"
 	"strings"
 	"sync"
@@ -27,16 +28,16 @@ func (e *Executor) Execute(str string) (string, error) {
 
 	switch name {
 	case "ping":
-		cmd = &Ping{}
+		cmd = &commands.Ping{}
 		break
 	case "echo":
-		cmd = &Echo{}
+		cmd = &commands.Echo{}
 		break
 	case "set":
-		cmd = &Set{Vocabulary: e.Vocabulary, Mu: e.Mu}
+		cmd = &commands.Set{Vocabulary: e.Vocabulary, Mu: e.Mu}
 		break
 	case "get":
-		cmd = &Get{e.Vocabulary}
+		cmd = &commands.Get{e.Vocabulary}
 		break
 	}
 

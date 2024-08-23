@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-starter-go/app/commands"
 	"github.com/codecrafters-io/redis-starter-go/app/lib"
+	"github.com/codecrafters-io/redis-starter-go/app/lib/commands"
 	"net"
 	"os"
 )
