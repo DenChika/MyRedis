@@ -1,0 +1,16 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+
+# Output of the go build tool
+bin/
+build/
+
+# Editor directories and files
+/.idea/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
