@@ -50,6 +50,7 @@ func (c *Set) pxExecute(word string, ms int) {
 	for {
 		select {
 		case <-ticker.C:
+			fmt.Println(word)
 			delete(*c.Vocabulary, word)
 			for k, v := range *c.Vocabulary {
 				fmt.Println("aboba", k, v)
