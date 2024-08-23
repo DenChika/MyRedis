@@ -34,7 +34,7 @@ func (c *Set) Execute(input []string) (string, error) {
 			if err != nil {
 				return "", err
 			}
-			go c.pxExecute(input[2], v)
+			go c.pxExecute(input[0], v)
 		default:
 			return "", errors.New("Unsupported command: " + src)
 		}
@@ -50,11 +50,7 @@ func (c *Set) pxExecute(word string, ms int) {
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Println(word)
 			delete(*c.Vocabulary, word)
-			for k, v := range *c.Vocabulary {
-				fmt.Println("aboba", k, v)
-			}
 			break
 		default:
 			continue

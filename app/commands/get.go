@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"fmt"
 	"github.com/codecrafters-io/redis-starter-go/app/redis/resp"
 	"github.com/codecrafters-io/redis-starter-go/app/redis/resp/types"
 )
@@ -13,9 +12,6 @@ type Get struct {
 func (c *Get) Execute(input []string) (string, error) {
 	src := input[0]
 	value, ok := (*c.Vocabulary)[src]
-	for k, v := range *c.Vocabulary {
-		fmt.Println("aboba", k, v)
-	}
 	if !ok {
 		return resp.EncodeEmpty(), nil
 	}
