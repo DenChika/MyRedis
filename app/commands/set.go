@@ -52,7 +52,7 @@ func (c *Set) pxExecute(word string, ms int) {
 		case <-ticker.C:
 			delete(*c.Vocabulary, word)
 			for k, v := range *c.Vocabulary {
-				fmt.Println(k, v)
+				fmt.Println("aboba", k, v)
 			}
 			break
 		default:

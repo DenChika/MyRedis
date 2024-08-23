@@ -14,7 +14,7 @@ func (c *Get) Execute(input []string) (string, error) {
 	src := input[0]
 	value, ok := (*c.Vocabulary)[src]
 	for k, v := range *c.Vocabulary {
-		fmt.Println(k, v)
+		fmt.Println("aboba", k, v)
 	}
 	if !ok {
 		return resp.EncodeEmpty(), nil
