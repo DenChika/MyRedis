@@ -6,24 +6,24 @@ import (
 )
 
 type SafeConn struct {
-	Conn net.Conn
-	Rwmu *sync.RWMutex
+	conn net.Conn
+	rwmu *sync.RWMutex
 }
 
 func NewSafeConn(Conn net.Conn) *SafeConn {
-	return &SafeConn{Conn: Conn, Rwmu: &sync.RWMutex{}}
+	return &SafeConn{conn: Conn, rwmu: &sync.RWMutex{}}
 }
 
 func (c *SafeConn) Read(b []byte) (n int, err error) {
-	return c.Conn.Read(b)
+	return c.conn.Read(b)
 }
 
 func (c *SafeConn) Write(b []byte) (n int, err error) {
-	c.Rwmu.Lock()
-	defer c.Rwmu.Unlock()
-	return c.Conn.Write(b)
+	c.rwmu.Lock()
+	defer c.rwmu.Unlock()
+	return c.conn.Write(b)
 }
 
 func (c *SafeConn) Close() error {
-	return c.Conn.Close()
+	return c.conn.Close()
 }

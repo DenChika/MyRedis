@@ -12,15 +12,15 @@ import (
 )
 
 type Set struct {
-	Vocabulary *map[string]string
-	Mu         *sync.Mutex
+	Vocabulary map[string]string
+	Mu         *sync.RWMutex
 }
 
 func (c *Set) Execute(input []string) (string, error) {
 	src, value := input[0], input[1]
 
 	c.Mu.Lock()
-	(*c.Vocabulary)[src] = value
+	c.Vocabulary[src] = value
 	c.Mu.Unlock()
 
 	if len(input) > 2 {
@@ -50,7 +50,9 @@ func (c *Set) pxExecute(word string, ms int) {
 	for {
 		select {
 		case <-ticker.C:
-			delete(*c.Vocabulary, word)
+			c.Mu.Lock()
+			delete(c.Vocabulary, word)
+			c.Mu.Unlock()
 			break
 		default:
 			continue

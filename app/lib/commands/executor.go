@@ -12,12 +12,12 @@ type CliCommand interface {
 }
 
 type Executor struct {
-	Vocabulary map[string]string
-	Mu         *sync.Mutex
+	vocabulary map[string]string
+	mu         *sync.RWMutex
 }
 
 func NewExecutor() *Executor {
-	return &Executor{Vocabulary: make(map[string]string), Mu: &sync.Mutex{}}
+	return &Executor{vocabulary: make(map[string]string), mu: &sync.RWMutex{}}
 }
 
 func (e *Executor) Execute(str string) (string, error) {
@@ -34,10 +34,10 @@ func (e *Executor) Execute(str string) (string, error) {
 		cmd = &commands.Echo{}
 		break
 	case "set":
-		cmd = &commands.Set{Vocabulary: &e.Vocabulary, Mu: e.Mu}
+		cmd = &commands.Set{Vocabulary: e.vocabulary, Mu: e.mu}
 		break
 	case "get":
-		cmd = &commands.Get{Vocabulary: &e.Vocabulary}
+		cmd = &commands.Get{Vocabulary: e.vocabulary, Mu: e.mu}
 		break
 	}
 
