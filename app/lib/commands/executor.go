@@ -11,13 +11,15 @@ type CliCommand interface {
 	Execute([]string) (string, error)
 }
 
+var vocabulary map[string]string = make(map[string]string)
+
 type Executor struct {
 	vocabulary map[string]string
 	mu         *sync.RWMutex
 }
 
-func NewExecutor() *Executor {
-	return &Executor{vocabulary: make(map[string]string), mu: &sync.RWMutex{}}
+func GetOrCreateExecutor() *Executor {
+	return &Executor{vocabulary: vocabulary, mu: &sync.RWMutex{}}
 }
 
 func (e *Executor) Execute(str string) (string, error) {

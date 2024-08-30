@@ -42,7 +42,7 @@ func handleConn(conn *lib.SafeConn) {
 		}
 	}()
 
-	executor := commands.NewExecutor()
+	executor := commands.GetOrCreateExecutor()
 
 	for {
 		go func() {
