@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/codecrafters-io/redis-starter-go/app/lib/commands"
+	"github.com/codecrafters-io/redis-starter-go/app/workers"
 	"net"
 	"os"
 )
@@ -22,6 +23,9 @@ func main() {
 		fmt.Println("Failed to bind to port 6379")
 		os.Exit(1)
 	}
+
+	workers.StartWorkers()
+
 	for {
 		c, err := l.Accept()
 		if err != nil {
@@ -38,7 +42,7 @@ func handleConn(conn net.Conn) {
 		}
 	}()
 
-	executor := commands.GetOrCreateExecutor()
+	executor := commands.GetExecutor()
 
 	for {
 		go func() {

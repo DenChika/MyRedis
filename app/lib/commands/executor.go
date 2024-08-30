@@ -4,22 +4,16 @@ import (
 	"github.com/codecrafters-io/redis-starter-go/app/commands"
 	"github.com/codecrafters-io/redis-starter-go/app/resp"
 	"strings"
-	"sync"
 )
 
 type CliCommand interface {
 	Execute([]string) (string, error)
 }
 
-var vocabulary map[string]string = make(map[string]string)
+type Executor struct{}
 
-type Executor struct {
-	vocabulary map[string]string
-	mu         *sync.RWMutex
-}
-
-func GetOrCreateExecutor() *Executor {
-	return &Executor{vocabulary: vocabulary, mu: &sync.RWMutex{}}
+func GetExecutor() *Executor {
+	return &Executor{}
 }
 
 func (e *Executor) Execute(str string) (string, error) {
@@ -36,10 +30,10 @@ func (e *Executor) Execute(str string) (string, error) {
 		cmd = &commands.Echo{}
 		break
 	case "set":
-		cmd = &commands.Set{Vocabulary: e.vocabulary, Mu: e.mu}
+		cmd = &commands.Set{Vocabulary: Storage.Vocabulary, Mu: Storage.Mu}
 		break
 	case "get":
-		cmd = &commands.Get{Vocabulary: e.vocabulary, Mu: e.mu}
+		cmd = &commands.Get{Vocabulary: Storage.Vocabulary, Mu: Storage.Mu}
 		break
 	}
 

@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"github.com/codecrafters-io/redis-starter-go/app/lib/commands"
 	"github.com/codecrafters-io/redis-starter-go/app/resp"
 	"github.com/codecrafters-io/redis-starter-go/app/resp/types"
 	"strconv"
@@ -12,7 +13,7 @@ import (
 )
 
 type Set struct {
-	Vocabulary map[string]string
+	Vocabulary map[string]commands.ExpiryValue
 	Mu         *sync.RWMutex
 }
 
@@ -20,21 +21,29 @@ func (c *Set) Execute(input []string) (string, error) {
 	src, value := input[0], input[1]
 
 	c.Mu.Lock()
-	c.Vocabulary[src] = value
+	c.Vocabulary[src] = commands.ExpiryValue{
+		Value:     value,
+		IsDurable: true,
+	}
 	c.Mu.Unlock()
 
 	if len(input) > 2 {
 		normalized := strings.ToLower(input[2])
+
 		if err := ensureThatParamIsNotMissing(input[2:]); err != nil {
 			return "", err
 		}
+
 		switch normalized {
 		case "px":
 			v, err := ensureThatIntParamIsValid(input[3])
 			if err != nil {
 				return "", err
 			}
-			go c.pxExecute(input[0], v)
+
+			c.Mu.Lock()
+			c.pxExecute(src, value, v)
+			c.Mu.Unlock()
 		default:
 			return "", errors.New("Unsupported command: " + src)
 		}
@@ -45,20 +54,12 @@ func (c *Set) Execute(input []string) (string, error) {
 	return respType.Encode(), nil
 }
 
-func (c *Set) pxExecute(word string, ms int) {
-	ticker := time.NewTicker(time.Duration(ms) * time.Millisecond)
-	for {
-		select {
-		case <-ticker.C:
-			c.Mu.Lock()
-			delete(c.Vocabulary, word)
-			c.Mu.Unlock()
-			break
-		default:
-			continue
-		}
+func (c *Set) pxExecute(word string, value string, duration int) {
+	c.Vocabulary[word] = commands.ExpiryValue{
+		Value:      value,
+		ValidUntil: time.Now().Add(time.Duration(duration) * time.Millisecond),
+		IsDurable:  false,
 	}
-
 }
 
 func ensureThatParamIsNotMissing(params []string) error {
