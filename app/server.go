@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/codecrafters-io/redis-starter-go/app/lib"
 	"github.com/codecrafters-io/redis-starter-go/app/lib/commands"
 	"net"
 	"os"
@@ -30,12 +29,12 @@ func main() {
 				fmt.Println("Error accepting connection: ", err.Error())
 				os.Exit(1)
 			}
-			handleConn(lib.NewSafeConn(c))
+			handleConn(c)
 		}()
 	}
 }
 
-func handleConn(conn *lib.SafeConn) {
+func handleConn(conn net.Conn) {
 	defer func() {
 		if err := conn.Close(); err != nil {
 			fmt.Println("Error closing connection: ", err.Error())
